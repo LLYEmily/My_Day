@@ -1,0 +1,745 @@
+:root {
+  --bg: #f7f2f4;
+  --surface: #fffdfd;
+  --sidebar: #fff7f9;
+
+  --pink: #f6dce5;
+  --pink-soft: #fbeef2;
+
+  --green: #dcefe1;
+  --blue: #e5eef7;
+  --lavender: #ebe7f7;
+  --cream: #f8edcf;
+
+  --text: #29272d;
+  --muted: #8b858c;
+  --border: #f0e8eb;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family:
+    Inter,
+    -apple-system,
+    BlinkMacSystemFont,
+    "Segoe UI",
+    sans-serif;
+}
+
+button,
+input,
+select {
+  font: inherit;
+}
+
+#root {
+  min-height: 100vh;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* APP SHELL */
+
+.app {
+  display: flex;
+
+  width: calc(100vw - 80px);
+  max-width: 1400px;
+
+  height: calc(100vh - 80px);
+  min-height: 650px;
+
+  background: var(--surface);
+
+  border-radius: 24px;
+  overflow: hidden;
+
+  box-shadow: 0 20px 60px rgba(70, 45, 55, 0.12);
+}
+
+/* SIDEBAR */
+
+.sidebar {
+  width: 220px;
+  flex-shrink: 0;
+
+  padding: 28px 18px;
+
+  background: var(--sidebar);
+  border-right: 1px solid var(--border);
+
+  box-sizing: border-box;
+}
+
+.sidebar h2 {
+  margin: 0 0 36px 10px;
+
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+
+  color: var(--text);
+}
+
+.sidebar nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.sidebar button {
+  width: 100%;
+
+  padding: 11px 14px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: transparent;
+  color: var(--muted);
+
+  text-align: left;
+  font-size: 14px;
+  font-weight: 500;
+
+  cursor: pointer;
+
+  transition: 0.15s ease;
+}
+
+.sidebar button:hover {
+  background: var(--pink-soft);
+  color: var(--text);
+}
+
+.sidebar button.active {
+  background: var(--pink);
+  color: #5f4650;
+
+  font-weight: 600;
+}
+
+/* MAIN */
+
+.main-content {
+  flex: 1;
+
+  padding: 42px 48px;
+
+  overflow-y: auto;
+
+  background: var(--surface);
+}
+
+/* TODAY PAGE */
+
+.today-page {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.today-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  margin-bottom: 36px;
+}
+
+.today-header h1 {
+  margin: 4px 0 6px;
+
+  font-size: 32px;
+  letter-spacing: -1px;
+}
+
+.today-date {
+  margin: 0;
+
+  color: var(--muted);
+  font-size: 14px;
+}
+
+.today-subtitle {
+  margin: 0;
+
+  color: var(--muted);
+}
+
+.new-task-button {
+  padding: 11px 18px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: var(--pink);
+  color: var(--text);
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 20px;
+}
+
+.dashboard-card {
+  min-height: 180px;
+
+  padding: 24px;
+
+  border: 1px solid var(--border);
+  border-radius: 18px;
+
+  box-sizing: border-box;
+}
+
+.dashboard-card h2 {
+  margin: 0 0 10px;
+
+  font-size: 18px;
+}
+
+.dashboard-card p {
+  color: var(--muted);
+}
+
+.tasks-card {
+  background: #fffafa;
+}
+
+.calendar-card {
+  background: var(--lavender);
+}
+
+.habits-card {
+  background: var(--green);
+}
+
+.ai-card {
+  background: var(--cream);
+}
+
+/* TASKS PAGE */
+
+.tasks-page {
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.tasks-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  margin-bottom: 28px;
+}
+
+.tasks-header h1 {
+  margin: 0 0 6px;
+
+  font-size: 32px;
+  letter-spacing: -1px;
+}
+
+.tasks-header p {
+  margin: 0;
+
+  color: var(--muted);
+}
+
+/* ADD TASK */
+
+.add-task-panel {
+  margin-bottom: 36px;
+
+  padding: 22px;
+
+  background: #fff9fb;
+
+  border: 1px solid var(--border);
+  border-radius: 18px;
+}
+
+.add-task-panel h2 {
+  margin: 0 0 16px;
+
+  font-size: 17px;
+}
+
+.task-form {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 0.9fr 1fr auto;
+
+  gap: 10px;
+}
+
+.task-form input,
+.task-form select {
+  min-width: 0;
+
+  padding: 11px 12px;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background: white;
+
+  color: var(--text);
+
+  outline: none;
+}
+
+.task-form input:focus,
+.task-form select:focus {
+  border-color: #e4c4ce;
+}
+
+.add-task-button {
+  padding: 11px 16px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: var(--pink);
+  color: var(--text);
+
+  font-weight: 600;
+
+  cursor: pointer;
+}
+
+.add-task-button:hover {
+  background: #f1d2dc;
+}
+
+/* TASK DATE GROUPS */
+
+.task-groups {
+  display: flex;
+  flex-direction: column;
+
+  gap: 30px;
+}
+
+.task-group {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+.task-date {
+  margin: 0;
+
+  color: var(--muted);
+
+  font-size: 13px;
+  font-weight: 700;
+
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.task-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 12px;
+}
+
+/* TASK CARDS */
+
+.task-card {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 18px 20px;
+
+  border: 1px solid var(--border);
+  border-radius: 16px;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+.task-card:hover {
+  transform: translateY(-1px);
+
+  box-shadow: 0 8px 24px rgba(70, 45, 55, 0.05);
+}
+
+.task-assignment {
+  background: #fbe8ee;
+}
+
+.task-test {
+  background: #eee8f8;
+}
+
+.task-study {
+  background: #eaf3f8;
+}
+
+.task-personal {
+  background: #e8f3e9;
+}
+
+.task-check {
+  width: 34px;
+  height: 34px;
+
+  flex-shrink: 0;
+
+  border: none;
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.65);
+
+  color: var(--text);
+
+  cursor: pointer;
+
+  font-size: 17px;
+}
+
+.task-info {
+  flex: 1;
+}
+
+.task-info h3 {
+  margin: 0 0 8px;
+
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.task-info h3.completed {
+  opacity: 0.45;
+
+  text-decoration: line-through;
+}
+
+.task-meta {
+  display: flex;
+  flex-wrap: wrap;
+
+  gap: 8px;
+
+  color: var(--muted);
+
+  font-size: 12px;
+}
+
+.task-meta span {
+  padding: 4px 8px;
+
+  background: rgba(255, 255, 255, 0.62);
+
+  border-radius: 8px;
+}
+
+.task-type {
+  text-transform: capitalize;
+}
+
+.empty-tasks {
+  padding: 40px;
+
+  border: 1px dashed var(--border);
+  border-radius: 18px;
+
+  text-align: center;
+
+  color: var(--muted);
+}
+
+/* SMALLER WINDOWS */
+
+@media (max-width: 1000px) {
+  .app {
+    width: calc(100vw - 30px);
+    height: calc(100vh - 30px);
+  }
+
+  .main-content {
+    padding: 32px;
+  }
+
+  .task-form {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .add-task-button {
+    grid-column: span 2;
+  }
+}
+/* CALENDAR PAGE */
+
+.calendar-page {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.calendar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+
+  margin-bottom: 28px;
+}
+
+.calendar-header h1 {
+  margin: 0 0 6px;
+
+  font-size: 32px;
+  letter-spacing: -1px;
+}
+
+.calendar-header p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.new-event-button {
+  padding: 11px 18px;
+
+  border: none;
+  border-radius: 12px;
+
+  background: var(--pink);
+  color: var(--text);
+
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.week-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+
+  gap: 12px;
+}
+
+.week-column {
+  min-height: 420px;
+
+  padding: 14px;
+
+  background: #fffafa;
+
+  border: 1px solid var(--border);
+  border-radius: 16px;
+
+  box-sizing: border-box;
+}
+
+.week-column h2 {
+  margin: 0 0 14px;
+
+  color: var(--muted);
+
+  font-size: 13px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.week-events {
+  display: flex;
+  flex-direction: column;
+
+  gap: 10px;
+}
+
+.calendar-event {
+  display: flex;
+  flex-direction: column;
+
+  gap: 5px;
+
+  padding: 12px;
+
+  border-radius: 12px;
+
+  font-size: 13px;
+}
+
+.calendar-event strong {
+  font-size: 13px;
+}
+
+.calendar-event span {
+  color: var(--muted);
+  font-size: 12px;
+}
+
+.event-course {
+  background: var(--blue);
+}
+
+.event-lab {
+  background: var(--green);
+}
+
+.event-event {
+  background: var(--lavender);
+}/* CALENDAR FORM */
+
+.event-form {
+  margin-bottom: 36px;
+  padding: 22px;
+
+  background: #fff9fb;
+
+  border: 1px solid var(--border);
+  border-radius: 18px;
+}
+
+.event-form h2 {
+  margin: 0 0 18px;
+  font-size: 17px;
+}
+
+.event-form-grid {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr 1fr;
+  gap: 10px;
+
+  margin-bottom: 14px;
+}
+
+.event-time-row,
+.event-date-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+
+  margin-bottom: 14px;
+}
+
+.event-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.event-field label,
+.repeat-section > label {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.event-field input,
+.event-field select,
+.event-field textarea {
+  width: 100%;
+  box-sizing: border-box;
+
+  padding: 11px 12px;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background: white;
+  color: var(--text);
+
+  outline: none;
+}
+
+.event-field textarea {
+  min-height: 42px;
+  resize: vertical;
+}
+
+.event-field input:focus,
+.event-field select:focus,
+.event-field textarea:focus {
+  border-color: #e4c4ce;
+}
+
+.repeat-section {
+  margin-bottom: 14px;
+}
+
+.weekday-picker {
+  display: flex;
+  gap: 7px;
+  margin-top: 8px;
+}
+
+.weekday-picker button {
+  padding: 8px 11px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: var(--pink-soft);
+  color: var(--muted);
+
+  cursor: pointer;
+
+  transition: 0.15s ease;
+}
+
+.weekday-picker button:hover {
+  color: var(--text);
+}
+
+.weekday-picker button.selected {
+  background: var(--pink);
+  color: #5f4650;
+  font-weight: 600;
+}
+
+.event-form-actions {
+  display: flex;
+  gap: 10px;
+
+  margin-top: 16px;
+}
+
+.add-event-button {
+  padding: 11px 16px;
+
+  border: none;
+  border-radius: 10px;
+
+  background: var(--pink);
+  color: var(--text);
+
+  font-weight: 600;
+  cursor: pointer;
+
+  transition: 0.15s ease;
+}
+
+.add-event-button:hover {
+  background: #f1d2dc;
+}
+
+.cancel-edit-button {
+  padding: 11px 16px;
+
+  border: 1px solid var(--border);
+  border-radius: 10px;
+
+  background: white;
+  color: var(--muted);
+
+  cursor: pointer;
+}
+
+.cancel-edit-button:hover {
+  color: var(--text);
+}
