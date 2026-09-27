@@ -1,10 +1,17 @@
 import { useEffect, useState } from "react"
+
 import Sidebar from "./components/Sidebar"
-import "./App.css"
+
 import Today from "./pages/Today"
 import Tasks from "./pages/Tasks"
-import type { Task } from "./types/Task"
 import Calendar from "./pages/Calendar"
+import Habits from "./pages/Habits"
+import AILearning from "./pages/AILearning"
+import Settings from "./pages/Settings"
+
+import type { Task } from "./types/Task"
+
+import "./App.css"
 
 function App() {
   const [currentPage, setCurrentPage] = useState("today")
@@ -29,15 +36,36 @@ function App() {
       />
 
       <main className="main-content">
-        {currentPage === "today" && <Today tasks={tasks} />}
-        {currentPage === "tasks" && (
-          <Tasks
-            tasks={tasks}
-            setTasks={setTasks}
-          />
-        )}
-        {currentPage === "calendar" && <Calendar />}
-      </main>
+  {currentPage === "today" && (
+  <Today
+    tasks={tasks}
+    setCurrentPage={setCurrentPage}
+  />
+)}
+
+  {currentPage === "tasks" && (
+    <Tasks
+      tasks={tasks}
+      setTasks={setTasks}
+    />
+  )}
+
+  {currentPage === "calendar" && (
+    <Calendar />
+  )}
+
+  {currentPage === "habits" && (
+    <Habits />
+  )}
+
+  {currentPage === "ai" && (
+    <AILearning />
+  )}
+
+  {currentPage === "settings" && (
+    <Settings />
+  )}
+</main>
     </div>
   )
 }

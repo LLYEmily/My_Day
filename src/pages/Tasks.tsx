@@ -1,198 +1,754 @@
 import { useState } from "react"
-import type { Task, TaskType } from "../types/Task"
+
+import type {
+  Dispatch,
+  SetStateAction
+} from "react"
+
+import type {
+  Task,
+  TaskType
+} from "../types/Task"
+
 
 type TasksProps = {
   tasks: Task[]
-  setTasks: React.Dispatch<React.SetStateAction<Task[]>>
+
+  setTasks:
+    Dispatch<
+      SetStateAction<Task[]>
+    >
 }
 
-function Tasks({ tasks, setTasks }: TasksProps) {
-  const [taskName, setTaskName] = useState("")
-  const [course, setCourse] = useState("")
-  const [dueDate, setDueDate] = useState("")
-  const [taskType, setTaskType] = useState<TaskType>("assignment")
 
-  function toggleTask(id: number) {
-    const updatedTasks = tasks.map((task) => {
-      if (task.id === id) {
-        return {
-          ...task,
-          completed: !task.completed
-        }
-      }
+type TaskSection =
+  | "Overdue"
+  | "Today"
+  | "Tomorrow"
+  | "Upcoming"
+  | "Completed"
 
-      return task
-    })
 
-    setTasks(updatedTasks)
+function getLocalDateString(
+  date: Date
+) {
+  return date.toLocaleDateString(
+    "en-CA"
+  )
+}
+
+
+function formatDueDate(
+  date: string
+) {
+  if (!date) {
+    return "No due date"
   }
 
-  function addTask() {
-    if (taskName.trim() === "") return
+  const taskDate =
+    new Date(
+      `${date}T12:00:00`
+    )
 
-    const newTask: Task = {
-      id: Date.now(),
-      name: taskName,
-      course: course,
-      dueDate: dueDate,
-      completed: false,
-      type: taskType
-    }
+  return taskDate
+    .toLocaleDateString(
+      "en-US",
+      {
+        month: "short",
+        day: "numeric"
+      }
+    )
+}
 
-    setTasks([...tasks, newTask])
 
+function Tasks({
+  tasks,
+  setTasks
+}: TasksProps) {
+
+  const [
+    showTaskForm,
+    setShowTaskForm
+  ] = useState(false)
+
+
+  const [
+    editingTaskId,
+    setEditingTaskId
+  ] = useState<number | null>(
+    null
+  )
+
+
+  const [
+    taskName,
+    setTaskName
+  ] = useState("")
+
+
+  const [
+    course,
+    setCourse
+  ] = useState("")
+
+
+  const [
+    dueDate,
+    setDueDate
+  ] = useState("")
+
+
+  const [
+    taskType,
+    setTaskType
+  ] =
+    useState<TaskType>(
+      "assignment"
+    )
+
+
+  function resetForm() {
     setTaskName("")
     setCourse("")
     setDueDate("")
     setTaskType("assignment")
+
+    setEditingTaskId(null)
   }
 
-  function formatTaskDate(date: string) {
-  if (date === "No due date") return "NO DUE DATE"
 
-  const today = new Date()
-  const taskDate = new Date(date + "T00:00:00")
+  function openTaskForm() {
+    resetForm()
 
-  const todayString = today.toISOString().split("T")[0]
-
-  const tomorrow = new Date(today)
-  tomorrow.setDate(today.getDate() + 1)
-  const tomorrowString = tomorrow.toISOString().split("T")[0]
-
-  if (date === todayString) {
-    return "TODAY"
+    setShowTaskForm(true)
   }
 
-  if (date === tomorrowString) {
-    return "TOMORROW"
+
+  function closeTaskForm() {
+    resetForm()
+
+    setShowTaskForm(false)
   }
 
-  return taskDate
-    .toLocaleDateString("en-US", {
-      weekday: "long",
-      month: "short",
-      day: "numeric"
-    })
-    .toUpperCase()
-}
 
-  const sortedTasks = [...tasks].sort((a, b) => {
-    if (!a.dueDate && !b.dueDate) return 0
-    if (!a.dueDate) return 1
-    if (!b.dueDate) return -1
+  function editTask(
+    task: Task
+  ) {
+    setEditingTaskId(
+      task.id
+    )
 
-    return a.dueDate.localeCompare(b.dueDate)
-  })
+    setTaskName(
+      task.name
+    )
 
-  const groupedTasks = sortedTasks.reduce<Record<string, Task[]>>(
-    (groups, task) => {
-      const date = task.dueDate || "No due date"
+    setCourse(
+      task.course
+    )
 
-      if (!groups[date]) {
-        groups[date] = []
+    setDueDate(
+      task.dueDate
+    )
+
+    setTaskType(
+      task.type ??
+      "study"
+    )
+
+    setShowTaskForm(true)
+  }
+
+
+  function saveTask() {
+    if (
+      taskName.trim() === ""
+    ) {
+      return
+    }
+
+
+    if (
+      editingTaskId !== null
+    ) {
+
+      setTasks(
+        tasks.map(
+          (task) =>
+            task.id ===
+            editingTaskId
+
+              ? {
+                  ...task,
+
+                  name:
+                    taskName,
+
+                  course,
+
+                  dueDate,
+
+                  type:
+                    taskType
+                }
+
+              : task
+        )
+      )
+
+    } else {
+
+      const newTask: Task = {
+        id: Date.now(),
+
+        name:
+          taskName,
+
+        course,
+
+        dueDate,
+
+        completed: false,
+
+        type:
+          taskType
       }
 
-      groups[date].push(task)
 
-      return groups
-    },
-    {}
+      setTasks([
+        ...tasks,
+        newTask
+      ])
+    }
+
+
+    closeTaskForm()
+  }
+
+
+  function deleteTask(
+    id: number
+  ) {
+    setTasks(
+      tasks.filter(
+        (task) =>
+          task.id !== id
+      )
+    )
+
+    closeTaskForm()
+  }
+
+
+  function toggleTask(
+    id: number
+  ) {
+    setTasks(
+      tasks.map(
+        (task) =>
+          task.id === id
+
+            ? {
+                ...task,
+
+                completed:
+                  !task.completed
+              }
+
+            : task
+      )
+    )
+  }
+
+
+  /* =========================
+     TASK SECTIONS
+  ========================= */
+
+  const today =
+    getLocalDateString(
+      new Date()
+    )
+
+
+  const tomorrowDate =
+    new Date()
+
+  tomorrowDate.setDate(
+    tomorrowDate.getDate() + 1
   )
+
+
+  const tomorrow =
+    getLocalDateString(
+      tomorrowDate
+    )
+
+
+  function getTaskSection(
+    task: Task
+  ): TaskSection {
+
+    if (task.completed) {
+      return "Completed"
+    }
+
+
+    if (!task.dueDate) {
+      return "Upcoming"
+    }
+
+
+    if (
+      task.dueDate < today
+    ) {
+      return "Overdue"
+    }
+
+
+    if (
+      task.dueDate === today
+    ) {
+      return "Today"
+    }
+
+
+    if (
+      task.dueDate === tomorrow
+    ) {
+      return "Tomorrow"
+    }
+
+
+    return "Upcoming"
+  }
+
+
+  const sortedTasks =
+    [...tasks].sort(
+      (a, b) => {
+
+        if (
+          !a.dueDate &&
+          !b.dueDate
+        ) {
+          return 0
+        }
+
+
+        if (!a.dueDate) {
+          return 1
+        }
+
+
+        if (!b.dueDate) {
+          return -1
+        }
+
+
+        return a.dueDate
+          .localeCompare(
+            b.dueDate
+          )
+      }
+    )
+
+
+  const groupedTasks =
+    sortedTasks.reduce<
+      Record<
+        TaskSection,
+        Task[]
+      >
+    >(
+      (
+        groups,
+        task
+      ) => {
+
+        const section =
+          getTaskSection(task)
+
+
+        groups[section]
+          .push(task)
+
+
+        return groups
+      },
+
+      {
+        Overdue: [],
+        Today: [],
+        Tomorrow: [],
+        Upcoming: [],
+        Completed: []
+      }
+    )
+
+
+  const sectionOrder:
+    TaskSection[] = [
+      "Overdue",
+      "Today",
+      "Tomorrow",
+      "Upcoming",
+      "Completed"
+    ]
+
 
   return (
     <div className="tasks-page">
-      <div className="tasks-header">
-        <div>
-          <h1>Tasks</h1>
-          <p>Keep track of assignments, tests and everyday things.</p>
+
+      {/* =====================
+          HEADER
+      ====================== */}
+
+      <div className="page-top-header">
+
+        <div className="page-title-block">
+
+          <h1>
+            Tasks
+          </h1>
+
+          <p>
+            Your tasks and deadlines.
+          </p>
+
         </div>
+
+
+        <button
+          className="primary-page-button"
+          onClick={
+            openTaskForm
+          }
+        >
+          + Add Task
+        </button>
+
       </div>
 
-      <section className="add-task-panel">
-        <h2>Add Task</h2>
 
-        <div className="task-form">
-          <input
-            value={taskName}
-            onChange={(e) => setTaskName(e.target.value)}
-            placeholder="Task name"
-          />
+      {/* =====================
+          ADD / EDIT TASK
+      ====================== */}
 
-          <input
-            value={course}
-            onChange={(e) => setCourse(e.target.value)}
-            placeholder="Course or category"
-          />
+      {showTaskForm && (
 
-          <select
-            value={taskType}
-            onChange={(e) => setTaskType(e.target.value as TaskType)}
-          >
-            <option value="assignment">Assignment</option>
-            <option value="test">Test</option>
-            <option value="study">Study</option>
-            <option value="personal">Personal</option>
-          </select>
+        <section className="add-task-panel">
 
-          <input
-            type="date"
-            value={dueDate}
-            onChange={(e) => setDueDate(e.target.value)}
-          />
+          <div className="task-form-heading">
 
-          <button className="add-task-button" onClick={addTask}>
-            + Add Task
-          </button>
-        </div>
-      </section>
+            <div>
+
+              <h2>
+                {editingTaskId !== null
+                  ? "Edit Task"
+                  : "Add Task"}
+              </h2>
+
+
+              <p>
+                {editingTaskId !== null
+                  ? "Update your task details."
+                  : "Add an assignment, test, study task or personal task."}
+              </p>
+
+            </div>
+
+
+            <button
+              className="task-form-close"
+              onClick={
+                closeTaskForm
+              }
+            >
+              ×
+            </button>
+
+          </div>
+
+
+          <div className="task-form">
+
+            <input
+              value={
+                taskName
+              }
+              onChange={(e) =>
+                setTaskName(
+                  e.target.value
+                )
+              }
+              placeholder="Task name"
+            />
+
+
+            <input
+              value={
+                course
+              }
+              onChange={(e) =>
+                setCourse(
+                  e.target.value
+                )
+              }
+              placeholder="Course"
+            />
+
+
+            <input
+              type="date"
+              value={
+                dueDate
+              }
+              onChange={(e) =>
+                setDueDate(
+                  e.target.value
+                )
+              }
+            />
+
+
+            <select
+              value={
+                taskType
+              }
+              onChange={(e) => {
+
+                const value =
+                  e.target.value
+
+
+                if (
+                  value ===
+                    "assignment" ||
+
+                  value ===
+                    "test" ||
+
+                  value ===
+                    "study" ||
+
+                  value ===
+                    "personal"
+                ) {
+                  setTaskType(
+                    value
+                  )
+                }
+
+              }}
+            >
+
+              <option value="assignment">
+                Assignment
+              </option>
+
+              <option value="test">
+                Test
+              </option>
+
+              <option value="study">
+                Study
+              </option>
+
+              <option value="personal">
+                Personal
+              </option>
+
+            </select>
+
+          </div>
+
+
+          <div className="task-form-actions">
+
+            <button
+              className="add-task-button"
+              onClick={
+                saveTask
+              }
+            >
+
+              {editingTaskId !== null
+                ? "Save Changes"
+                : "+ Add Task"}
+
+            </button>
+
+
+            <button
+              className="cancel-task-button"
+              onClick={
+                closeTaskForm
+              }
+            >
+              Cancel
+            </button>
+
+
+            {editingTaskId !== null && (
+
+              <button
+                className="delete-task-button"
+                onClick={() =>
+                  deleteTask(
+                    editingTaskId
+                  )
+                }
+              >
+                Delete Task
+              </button>
+
+            )}
+
+          </div>
+
+        </section>
+
+      )}
+
+
+      {/* =====================
+          TASK LIST
+      ====================== */}
 
       <div className="task-groups">
-        {Object.entries(groupedTasks).map(([date, dateTasks]) => (
-          <section className="task-group" key={date}>
-            <h2 className="task-date">
-  {formatTaskDate(date)}
-</h2>
 
-            <div className="task-list">
-              {dateTasks.map((task) => (
-                <div
-                  key={task.id}
-                  className={`task-card task-${task.type ?? "study"}`}
+        {tasks.length === 0 ? (
+
+          <p className="empty-tasks">
+            No tasks yet.
+          </p>
+
+        ) : (
+
+          sectionOrder
+            .filter(
+              (section) =>
+                groupedTasks[
+                  section
+                ].length > 0
+            )
+            .map(
+              (section) => (
+
+                <section
+                  className="task-group"
+                  key={section}
                 >
-                  <button
-                    className="task-check"
-                    onClick={() => toggleTask(task.id)}
+
+                  <h2
+                    className={`task-date task-section-${section
+                      .toLowerCase()
+                      .replace(" ", "-")}`}
                   >
-                    {task.completed ? "✓" : "○"}
-                  </button>
+                    {section}
+                  </h2>
 
-                  <div className="task-info">
-                    <h3 className={task.completed ? "completed" : ""}>
-                      {task.name}
-                    </h3>
 
-                    <div className="task-meta">
-                      {task.course && <span>{task.course}</span>}
+                  <div className="task-list">
 
-                      <span className="task-type">
-                        {task.type ?? "study"}
-                      </span>
-                    </div>
+                    {groupedTasks[
+                      section
+                    ].map(
+                      (task) => (
+
+                        <div
+                          className={`task-card task-${task.type ?? "study"} ${
+                            task.completed
+                              ? "completed"
+                              : ""
+                          }`}
+                          key={
+                            task.id
+                          }
+                          onClick={() =>
+                            editTask(
+                              task
+                            )
+                          }
+                        >
+
+                          <button
+                            className="task-check"
+                            onClick={(e) => {
+
+                              e.stopPropagation()
+
+                              toggleTask(
+                                task.id
+                              )
+
+                            }}
+                          >
+
+                            {task.completed
+                              ? "✓"
+                              : ""}
+
+                          </button>
+
+
+                          <div className="task-info">
+
+                            <strong>
+                              {task.name}
+                            </strong>
+
+
+                            <div className="task-meta">
+
+                              {task.course && (
+
+                                <span>
+                                  {task.course}
+                                </span>
+
+                              )}
+
+
+                              {task.dueDate && (
+
+                                <span>
+                                  {formatDueDate(
+                                    task.dueDate
+                                  )}
+                                </span>
+
+                              )}
+
+
+                              <span>
+                                {task.type ??
+                                  "study"}
+                              </span>
+
+                            </div>
+
+                          </div>
+
+                        </div>
+
+                      )
+                    )}
+
                   </div>
-                </div>
-              ))}
-            </div>
-          </section>
-        ))}
 
-        {tasks.length === 0 && (
-          <div className="empty-tasks">
-            <p>No tasks yet ✨</p>
-          </div>
+                </section>
+
+              )
+            )
+
         )}
+
       </div>
+
     </div>
   )
 }
+
 
 export default Tasks
