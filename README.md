@@ -1,32 +1,33 @@
-# React + TypeScript + Vite
+# MyDay 🌷
 
-This template provides a minimal setup to get React working in Vite with HMR and some Oxlint rules.
+MyDay is a personal student productivity desktop app built with React, TypeScript, Vite, and Tauri.
 
-Currently, two official plugins are available:
+It combines task management, calendar planning, habit tracking, and AI learning in one app. I built this project to create a simple productivity system that better fits my own student life.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## Main Features
 
-## React Compiler
+- Create, edit, delete, and complete tasks
+- Organize tasks by overdue, today, tomorrow, upcoming, and completed
+- Weekly calendar with one-time and recurring events
+- Track complete, count, and duration habits
+- View daily progress from the Today dashboard
+- Follow a structured AI learning roadmap
+- Save app data locally using localStorage
+- Run as a macOS desktop app using Tauri
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## Technologies
 
-## Expanding the Oxlint configuration
+- React
+- TypeScript
+- Vite
+- Tauri
+- Rust
+- CSS
+- localStorage
 
-If you are developing a production application, we recommend enabling type-aware lint rules by installing `oxlint-tsgolint` and editing `.oxlintrc.json`:
+## How to Run
 
-```json
-{
-  "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": ["react", "typescript", "oxc"],
-  "options": {
-    "typeAware": true
-  },
-  "rules": {
-    "react/rules-of-hooks": "error",
-    "react/only-export-components": ["warn", { "allowConstantExport": true }]
-  }
-}
-```
+Install dependencies:
 
-See the [Oxlint rules documentation](https://oxc.rs/docs/guide/usage/linter/rules) for the full list of rules and categories.
+```bash
+npm install
